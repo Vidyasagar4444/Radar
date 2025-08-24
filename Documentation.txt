@@ -1,0 +1,190 @@
+Microsoft Windows [Version 10.0.19045.6218]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>cd E:\bin\win64
+
+C:\Windows\system32>"D:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a"
+The system cannot find the path specified.
+
+C:\Windows\system32>"E:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a"
+WARNING: Uninstalling these products is not supported. To cancel this installation, press CTRL+C.
+
+Installing with the following parameters:
+--destination=
+--doc=true
+--source=E:\archives
+--matlabroot=C:\Program Files\MATLAB\R2025a
+---------------------------------------------
+Starting install
+Error: Invalid destination. Specified destination must not be an empty path.
+
+C:\Windows\system32>"E:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a" --destination="C:\Program Files\MATLAB\R2025a\help"
+WARNING: Uninstalling these products is not supported. To cancel this installation, press CTRL+C.
+
+Installing with the following parameters:
+--destination=C:\Program Files\MATLAB\R2025a\help
+--doc=true
+--source=E:\archives
+--matlabroot=C:\Program Files\MATLAB\R2025a
+---------------------------------------------
+Starting install
+Products will be installed to: C:\Program Files\MATLAB\R2025a\help
+%%% 2nd %%%%
+
+"E:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a" --destination="C:\MATLAB_DocTemp" --source="E:\archives"
+
+Got it 👍 — the error is because **`mpm.exe` requires a `--destination` path** (where it will place temporary extracted files).
+In your command, it was empty → so it failed.
+
+Let’s fix it properly:
+
+---
+
+### Correct Command
+
+Run this in **Administrator Command Prompt**:
+
+```bat
+"E:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a" --destination="C:\MATLAB_DocTemp" --source="E:\archives"
+```
+
+---
+
+### Explanation of parameters:
+
+* `--matlabroot="C:\Program Files\MATLAB\R2025a"` → your MATLAB installation folder
+* `--destination="C:\MATLAB_DocTemp"` → a temporary folder (you can delete later)
+* `--source="E:\archives"` → where the installer will pull packages from (inside ISO)
+
+---
+
+### After successful run
+
+1. Go to:
+
+   ```
+   C:\Program Files\MATLAB\R2025a\help\
+   ```
+
+   ✅ You should now see `documentation-center.html` and `matlab\ref\plot.html`.
+
+2. In MATLAB, test:
+
+   ```matlab
+   doc plot
+   ```
+
+   It should open offline help correctly.
+
+---
+
+⚠️ Important: Make sure the folder `C:\MATLAB_DocTemp` **exists** before running, or create it:
+
+```bat
+mkdir C:\MATLAB_DocTemp
+```
+
+---
+
+Do you want me to write the **exact final 2 commands** (including `mkdir`) so you can copy-paste directly without errors?
+
+Perfect 👍 here are the **exact final 2 commands** you can copy–paste into **Administrator Command Prompt**:
+
+```bat
+mkdir C:\MATLAB_DocTemp
+"E:\bin\win64\mpm.exe" install-doc --matlabroot="C:\Program Files\MATLAB\R2025a" --destination="C:\MATLAB_DocTemp" --source="E:\archives"
+```
+
+---
+
+✅ First command creates the temp folder.
+✅ Second command runs the offline documentation installer.
+
+After this finishes, try in MATLAB:
+
+```matlab
+doc plot
+```
+
+It should open the offline documentation.
+
+Do you want me to also give you a **step-by-step check** of how to confirm if the docs actually got installed in the right place?
+Got it 👍 After running the two commands, here’s the **step-by-step check** to confirm MATLAB documentation installed correctly:
+
+---
+
+### ✅ Step 1: Check the install logs
+
+* When you run
+
+  ```bat
+  "E:\bin\win64\mpm.exe" install-doc ...
+  ```
+
+  the command window should show messages like *“Installing documentation”* and *“Completed successfully”*.
+* If you see **errors** → the doc didn’t install properly.
+
+---
+
+### ✅ Step 2: Verify the documentation files
+
+* Go to the folder you gave in `--destination`, i.e.
+
+  ```
+  C:\MATLAB_DocTemp
+  ```
+* You should see many folders inside (like `5g`, `comm`, `dsp`, `examples`, etc.) — just like in the screenshot you shared earlier.
+  That means the doc content was extracted.
+
+---
+
+### ✅ Step 3: Check MATLAB doc root
+
+* Open MATLAB.
+* Run this command:
+
+  ```matlab
+  docroot
+  ```
+* Normally it should return something like:
+
+  ```
+  file:///C:/MATLAB_DocTemp/help
+  ```
+* If it still points to the online site or is empty → we need to **set the docroot** manually.
+
+---
+
+### ✅ Step 4: Set MATLAB to use offline docs
+
+If `docroot` isn’t pointing to your installed docs, set it like this in MATLAB:
+
+```matlab
+docroot('C:\MATLAB_DocTemp\help')
+```
+
+(Adjust path if your extracted docs are in another location.)
+
+---
+
+### ✅ Step 5: Test with a help command
+
+Now test:
+
+```matlab
+doc plot
+```
+
+or
+
+```matlab
+doc fft
+```
+
+👉 If it opens the **offline HTML pages** in MATLAB help browser → installation is confirmed ✅
+
+---
+
+Do you want me to write you the **exact MATLAB commands** to permanently set the offline docs (so MATLAB always opens them, not the online site)?
+
+
